@@ -7,7 +7,7 @@ resource "aws_launch_template" "main" {
     name = aws_iam_instance_profile.main.name
   }
 
-  image_id = data.aws_ami.ami.image_id
+  image_id = data.aws_ami.ami.id
 
   instance_initiated_shutdown_behavior = "terminate"
 
