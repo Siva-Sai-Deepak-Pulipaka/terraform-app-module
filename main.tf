@@ -28,10 +28,8 @@ resource "aws_launch_template" "main" {
   }
 
   user_data = base64encode(templatefile("${path.module}/userdata.sh", {
-        db_address      = local.db_address
-        admin_user      = local.variable1
-        admin_password  = local.variable2
-        public_alb_dns  = local.private_alb_dns
+        env = var.env
+        component = var.component
       } ))
 }
 
