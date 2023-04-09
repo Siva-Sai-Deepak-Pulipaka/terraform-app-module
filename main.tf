@@ -24,7 +24,7 @@ resource "aws_launch_template" "main" {
 
     tags = merge(
     var.tags,
-    { Name = "${var.component}-${var.env}" }
+    { Name = "${var.component}-${var.env}", Monitor = "yes" }
   )
   }
 
@@ -49,6 +49,14 @@ resource "aws_security_group" "main" {
 
   }
   
+  ingress {
+    description      = "PROMETHEUS"
+    from_port        = 9100
+    to_port          = 9100
+    protocol         = "tcp"
+    cidr_blocks      = var.monitoring_nodes
+
+  }
   ingress {
     description      = "APP"
     from_port        = var.port
@@ -99,10 +107,12 @@ resource "aws_lb_target_group" "main" {
   protocol = "HTTP"
   vpc_id   = var.vpc_id
   health_check {
+    enabled = true
     healthy_threshold = 2
     unhealthy_threshold = 5
     interval = 5
     timeout = 3
+    path = "/health"
   }
   tags = merge(
     var.tags,
